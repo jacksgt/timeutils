@@ -11,6 +11,7 @@ Command line options:
 --grep # easily grepable format
 --sentence # prints a complete sentence
 --help # prints usage as well as available command line options
+--seconds # prints only the seconds of the uptime (nothing else)
 ```
 
 How to compile:
