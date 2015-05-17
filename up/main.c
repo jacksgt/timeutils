@@ -17,7 +17,7 @@ int main( int argc, char **argv ) {
     if( argc >= 2 ) {
         /* check for call for help */
         if( strcmp( argv[1], "--help" ) == 0 ) {
-            printf( "USAGE: %s [--help] [--grep] [--sentence]\n", argv[0] );
+            printf( "USAGE: %s [--help] [--grep] [--sentence] [--seconds]\n", argv[0] );
             return 0;
         }
         if( strcmp( argv[1], "--sentence" ) == 0 ) {
@@ -25,6 +25,9 @@ int main( int argc, char **argv ) {
         }
         if( strcmp( argv[1], "--grep" ) == 0 ) {
             printUptime("grep");
+        }
+        if( strcmp( argv[1], "--seconds" ) == 0 ) {
+            printUptime("seconds");
         }
     } else {
         printUptime("");
@@ -36,19 +39,17 @@ long int getSeconds() {
     /* reads the value from /proc/uptime and returns its value as long int in seconds */
     char line[LINE_LENGTH];
     char * token;
-    //    int fileSize;
     int seconds;
 
     /* read content of /proc/uptime (provided by the kernel) */
-    fp = fopen (UPTIME, "r");
+    fp = fopen ( UPTIME, "r" );
 
     if( fp == NULL ) {
-        fprintf( stderr, "Could not open %s\n", UPTIME);
+        fprintf( stderr, "Could not open %s\n", UPTIME );
         return -1;
     }
 
     while( fgets( line, LINE_LENGTH, fp ) != NULL ) {
-
         /* split the line at the space */
         token = strtok( line, " " );
 
@@ -66,6 +67,10 @@ long int getSeconds() {
 
 int printUptime(char *option) {
     long int seconds = getSeconds();
+    if( strcmp( option, "seconds" ) == 0 ) {
+        printf( "%ld\n", seconds );
+        exit(0);
+    }
     char daysStr[] = "days";
     char hoursStr[] = "hours";
     char minutesStr[] = "minutes";
@@ -80,7 +85,7 @@ int printUptime(char *option) {
         opt_sentence = true;
 
     if( seconds == -1 )
-        return 1;
+        return -1;
 
     /* begin arithmetic operations */
     days = seconds/86000;
